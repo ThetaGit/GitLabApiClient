@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using GitLabApiClient.Internal.Paths;
+using GitLabApiClient.Models;
 using GitLabApiClient.Models.Job.Requests;
 using GitLabApiClient.Models.Job.Responses;
 using GitLabApiClient.Models.Milestones.Requests;
@@ -213,5 +214,45 @@ namespace GitLabApiClient
         /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
         /// <returns>Status of the import</returns>
         Task<ImportStatus> GetImportStatusAsync(ProjectId projectId);
+
+        /// <summary>
+        /// Adds a user to a project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="request">Add project member request.</param>
+        /// <returns>Newly created membership.</returns>
+        Task<Member> AddMemberAsync(ProjectId projectId, AddProjectMemberRequest request);
+
+        /// <summary>
+        /// Updates a user's project membership.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="userId">The user ID of the member.</param>
+        /// <param name="request">Update project member request.</param>
+        /// <returns>Updated membership.</returns>
+        Task<Member> UpdateMemberAsync(ProjectId projectId, int userId, AddProjectMemberRequest request);
+
+        /// <summary>
+        /// Removes a user as a member of the project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="userId">The user ID of the member.</param>
+        Task RemoveMemberAsync(ProjectId projectId, int userId);
+
+        /// <summary>
+        /// Get a list of members in this project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="search">A query string to search for members.</param>
+        /// <returns>Project members satisfying options.</returns>
+        Task<IList<Member>> GetMembersAsync(ProjectId projectId, string search = null);
+
+        /// <summary>
+        /// Get a list of all members (including inherited) in this project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="search">A query string to search for members.</param>
+        /// <returns>Project members satisfying options.</returns>
+        Task<IList<Member>> GetAllMembersAsync(ProjectId projectId, string search = null);
     }
 }

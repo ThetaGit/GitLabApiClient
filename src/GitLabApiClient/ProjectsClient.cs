@@ -6,6 +6,7 @@ using GitLabApiClient.Internal.Http;
 using GitLabApiClient.Internal.Paths;
 using GitLabApiClient.Internal.Queries;
 using GitLabApiClient.Internal.Utilities;
+using GitLabApiClient.Models;
 using GitLabApiClient.Models.Job.Requests;
 using GitLabApiClient.Models.Job.Responses;
 using GitLabApiClient.Models.Milestones.Requests;
@@ -334,6 +335,77 @@ namespace GitLabApiClient
         public async Task<ImportStatus> GetImportStatusAsync(ProjectId projectId)
         {
             return await _httpFacade.Get<ImportStatus>($"projects/{projectId}/import");
+        }
+
+        /// <summary>
+        /// Adds a user to a project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="request">Add project member request.</param>
+        /// <returns>Newly created membership.</returns>
+        public async Task<Member> AddMemberAsync(ProjectId projectId, AddProjectMemberRequest request)
+        {
+            Guard.NotNull(request, nameof(request));
+            return await _httpFacade.Post<Member>($"projects/{projectId}/members", request);
+        }
+
+                /// <summary>
+        /// Updates a user's project membership.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="userId">The user ID of the member.</param>
+        /// <param name="request">Update project member request.</param>
+        /// <returns>Updated membership.</returns>
+        public async Task<Member> UpdateMemberAsync(ProjectId projectId, int userId, AddProjectMemberRequest request)
+        {
+            Guard.NotNull(request, nameof(request));
+            return await _httpFacade.Put<Member>($"projects/{projectId}/members/{userId}", request);
+        }
+
+        /// <summary>
+        /// Removes a user as a member of the project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="userId">The user ID of the member.</param>
+        public async Task RemoveMemberAsync(ProjectId projectId, int userId)
+        {
+            await _httpFacade.Delete($"projects/{projectId}/members/{userId}");
+        }
+
+        /// <summary>
+        /// Get a list of members in this project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="search">A query string to search for members.</param>
+        /// <returns>Project members satisfying options.</returns>
+        public async Task<IList<Member>> GetMembersAsync(ProjectId projectId, string search = null)
+        {
+            string url = $"projects/{projectId}/members";
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                url += $"?search={search}";
+            }
+
+            return await _httpFacade.GetPagedList<Member>(url);
+        }
+
+        /// <summary>
+        /// Get a list of all members (including inherited) in this project.
+        /// </summary>
+        /// <param name="projectId">The ID, path or <see cref="Project"/> of the project.</param>
+        /// <param name="search">A query string to search for members.</param>
+        /// <returns>Project members satisfying options.</returns>
+        public async Task<IList<Member>> GetAllMembersAsync(ProjectId projectId, string search = null)
+        {
+            string url = $"projects/{projectId}/members/all";
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                url += $"?search={search}";
+            }
+
+            return await _httpFacade.GetPagedList<Member>(url);
         }
     }
 }
