@@ -7,6 +7,7 @@ using GitLabApiClient.Models.Groups.Requests;
 using GitLabApiClient.Models.Groups.Responses;
 using GitLabApiClient.Models.Milestones.Requests;
 using GitLabApiClient.Models.Milestones.Responses;
+using GitLabApiClient.Models.Projects.Requests;
 using GitLabApiClient.Models.Projects.Responses;
 using GitLabApiClient.Models.Runners.Responses;
 
@@ -254,5 +255,34 @@ namespace GitLabApiClient
         /// <param name="groupId">The ID, path or <see cref="Group"/> of the group.</param>
         /// <param name="key">The Key ID of the variable.</param>
         Task DeleteVariableAsync(GroupId groupId, string key);
+
+                /// <summary>
+        /// Retrieves group access tokens by its id.
+        /// </summary>
+        /// <param name="groupId">Id of the <see cref="Group"/> group.</param>
+        Task<IList<AccessToken>> GetAccessTokensAsync(GroupId groupId);
+
+        /// <summary>
+        /// Retrieves a group access token by its id.
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="accessTokenId">Id of the access token.</param>
+        Task<AccessToken> GetAccessTokenAsync(GroupId groupId, AccessTokenId accessTokenId);
+
+
+        /// <summary>
+        /// Creates new group access token.
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="request">Create access token request.</param>
+        /// <returns>Newly created access token.</returns>
+        Task<AccessToken> CreateAccessTokenAsync(GroupId groupId, CreateAccessTokenRequest request);
+
+        /// <summary>
+        /// Deletes access token
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="accessTokenId">The Key ID of the access token.</param>
+        Task DeleteAccessTokenAsync(GroupId groupId, AccessTokenId accessTokenId);
     }
 }

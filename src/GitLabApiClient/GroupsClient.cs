@@ -11,6 +11,7 @@ using GitLabApiClient.Models.Groups.Requests;
 using GitLabApiClient.Models.Groups.Responses;
 using GitLabApiClient.Models.Milestones.Requests;
 using GitLabApiClient.Models.Milestones.Responses;
+using GitLabApiClient.Models.Projects.Requests;
 using GitLabApiClient.Models.Projects.Responses;
 using GitLabApiClient.Models.Runners.Responses;
 
@@ -383,5 +384,38 @@ namespace GitLabApiClient
         /// <param name="key">The Key ID of the variable.</param>
         public async Task DeleteVariableAsync(GroupId groupId, string key) =>
             await _httpFacade.Delete($"groups/{groupId}/variables/{key}");
+
+        /// <summary>
+        /// Retrieves group access tokens by its id.
+        /// </summary>
+        /// <param name="groupId">Id of the group.</param>
+        public async Task<IList<AccessToken>> GetAccessTokensAsync(GroupId groupId) =>
+            await _httpFacade.GetPagedList<AccessToken>($"groups/{groupId}/access_tokens");
+
+        /// <summary>
+        /// Retrieves a group access token by its id.
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="accessTokenId">Id of the access token.</param>
+        public async Task<AccessToken> GetAccessTokenAsync(GroupId groupId, AccessTokenId accessTokenId) =>
+            await _httpFacade.Get<AccessToken>($"groups/{groupId}/access_tokens/{accessTokenId}");
+
+
+        /// <summary>
+        /// Creates new group access token.
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="request">Create access token request.</param>
+        /// <returns>Newly created access token.</returns>
+        public async Task<AccessToken> CreateAccessTokenAsync(GroupId groupId, CreateAccessTokenRequest request) =>
+            await _httpFacade.Post<AccessToken>($"groups/{groupId}/access_tokens", request);
+
+        /// <summary>
+        /// Deletes access token
+        /// </summary>
+        /// <param name="groupId">The ID, path or <see cref="AccessToken"/> of the group.</param>
+        /// <param name="accessTokenId">The Key ID of the access token.</param>
+        public async Task DeleteAccessTokenAsync(GroupId groupId, AccessTokenId accessTokenId) =>
+            await _httpFacade.Delete($"groups/{groupId}/access_tokens/{accessTokenId}");
     }
 }
